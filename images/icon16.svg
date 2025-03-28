@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Background Circle -->
+  <circle cx="8" cy="8" r="7.5" fill="#4299e1" />
+  
+  <!-- Notepad Base - Simplified for small size -->
+  <rect x="4" y="3" width="8" height="10" rx="1" fill="white" stroke="#2c5282" stroke-width="0.5" />
+  
+  <!-- Notepad Lines - Fewer lines for clarity -->
+  <line x1="5" y1="6" x2="11" y2="6" stroke="#cbd5e0" stroke-width="0.5" />
+  <line x1="5" y1="8" x2="11" y2="8" stroke="#cbd5e0" stroke-width="0.5" />
+  <line x1="5" y1="10" x2="11" y2="10" stroke="#cbd5e0" stroke-width="0.5" />
+  
+  <!-- Pencil - Simplified -->
+  <g transform="rotate(45, 9.5, 5.5)">
+    <rect x="9" y="3" width="1" height="5" fill="#f6ad55" />
+    <polygon points="9,3 10,3 9.5,2" fill="#4a5568" />
+    <rect x="9" y="7.5" width="1" height="0.5" fill="#e53e3e" />
+  </g>
+  
+  <!-- Timer Element - Minimalist -->
+  <circle cx="4" cy="4" r="1.5" fill="#f7fafc" stroke="#2c5282" stroke-width="0.5" />
+  <line x1="4" y1="4" x2="4" y2="3" stroke="#2c5282" stroke-width="0.5" />
+  <line x1="4" y1="4" x2="5" y2="4.5" stroke="#2c5282" stroke-width="0.5" />
+</svg>

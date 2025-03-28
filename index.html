@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyDailyScribe | Build a Writing Habit</title>
+    <style>
+      :root {
+        --primary-color: #4a6fa5;
+        --secondary-color: #6d8ebd;
+        --accent-color: #ffd166;
+        --dark-color: #313638;
+        --light-color: #f5f5f5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--light-color);
+        color: var(--dark-color);
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: var(--primary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background-color: var(--accent-color);
+        color: var(--dark-color);
+        padding: 0.8rem 1.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.2s ease;
+      }
+
+      .cta-button:hover {
+        transform: scale(1.05);
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+
+      .feature-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .feature-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      .how-it-works {
+        margin: 3rem 0;
+        text-align: center;
+      }
+
+      .how-it-works h2 {
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .step {
+        position: relative;
+        padding: 1.5rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .step-number {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--secondary-color);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .testimonials {
+        margin: 3rem 0;
+        text-align: center;
+      }
+
+      .testimonials h2 {
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+      }
+
+      .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .testimonial {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .testimonial q {
+        font-style: italic;
+        display: block;
+        margin-bottom: 1rem;
+      }
+
+      .testimonial .author {
+        font-weight: bold;
+        color: var(--secondary-color);
+      }
+
+      .faq {
+        margin: 3rem 0;
+      }
+
+      .faq h2 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .faq-item {
+        margin-bottom: 1rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .faq-question {
+        padding: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .faq-answer {
+        padding: 0 1rem 1rem;
+      }
+
+      footer {
+        background-color: var(--dark-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .footer-links {
+        margin: 1rem 0;
+      }
+
+      .footer-links a {
+        color: var(--accent-color);
+        margin: 0 1rem;
+        text-decoration: none;
+      }
+
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>MyDailyScribe</h1>
+      <p class="tagline">Build your writing habit one topic at a time</p>
+      <a href="#" class="cta-button">Install Extension</a>
+    </header>
+
+    <main>
+      <section class="features">
+        <div class="feature-card">
+          <h3>Daily Writing Prompts</h3>
+          <p>
+            Receive a new, thought-provoking topic every day to inspire your
+            writing practice and push your creative boundaries.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Customizable Timer</h3>
+          <p>
+            Set your own writing duration from quick 5-minute sessions to deep
+            60-minute immersions to match your schedule.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Distraction-Free Environment</h3>
+          <p>
+            Focus solely on your writing with a clean, minimal interface
+            designed to eliminate distractions and enhance productivity.
+          </p>
+        </div>
+      </section>
+
+      <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <p>
+              Install the MyDailyScribe browser extension from the Chrome Web
+              Store.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <p>
+              Click the extension icon to open a new tab with your daily topic.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <p>
+              Set your desired writing time and begin your writing practice.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <p>
+              Build consistency by writing daily and watch your skills improve
+              over time.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="testimonials">
+        <h2>What Writers Are Saying</h2>
+        <div class="testimonial-grid">
+          <div class="testimonial">
+            <q
+              >MyDailyScribe has transformed my writing process. The random
+              topics push me to think creatively and the timer keeps me
+              focused.</q
+            >
+            <p class="author">- Alex T., Fiction Writer</p>
+          </div>
+          <div class="testimonial">
+            <q
+              >As a blogger, I use MyDailyScribe for warm-up exercises. It's
+              helped me overcome writer's block countless times!</q
+            >
+            <p class="author">- Jamie K., Content Creator</p>
+          </div>
+          <div class="testimonial">
+            <q
+              >The simplicity is what makes it effective. No account needed, no
+              distractions—just writing.</q
+            >
+            <p class="author">- Morgan L., Student</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+          <div class="faq-question">Is MyDailyScribe free to use?</div>
+          <div class="faq-answer">
+            Yes, MyDailyScribe is completely free with no hidden fees or premium
+            features.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Do I need to create an account?</div>
+          <div class="faq-answer">
+            No, MyDailyScribe doesn't require any account creation or sign-up.
+            Just install and start writing!
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I save my writing?</div>
+          <div class="faq-answer">
+            Yes, you can copy your text to save it elsewhere. MyDailyScribe
+            doesn't store your writing on any servers.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Which browsers support MyDailyScribe?</div>
+          <div class="faq-answer">
+            Currently, MyDailyScribe is available for Chrome, with Firefox and
+            Edge versions coming soon.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Does MyDailyScribe collect my data?</div>
+          <div class="faq-answer">
+            MyDailyScribe does not collect any personal data. See our
+            <a href="#privacy">Privacy Policy</a> for more details.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 MyDailyScribe - Build your writing habit one topic at a time</p>
+      <div class="footer-links">
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+      </div>
+    </footer>
+  </body>
+</html>
