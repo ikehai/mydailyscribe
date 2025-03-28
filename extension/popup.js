@@ -283,12 +283,6 @@ function updateStatsDisplay() {
 
 // Start the writing session
 function startWriting() {
-  const text = editorElement.value.trim();
-  if (text) {
-    analyzeTextWithAI(text);
-    return;
-  }
-
   editorElement.disabled = false;
   editorElement.focus();
   startButton.disabled = true;
@@ -355,8 +349,25 @@ function updateTimer() {
     clearInterval(timerInterval);
     clearInterval(autoSaveInterval);
     timerElement.textContent = "Time's up!";
-    editorElement.disabled = true;
+
+    // Keep editor enabled (change #1)
+    // editorElement.disabled = true; - removing this line
+
     analyzeButton.disabled = false;
+
+    // Show a notification that time is up
+    const timeNotification = document.createElement("div");
+    timeNotification.className = "time-notification";
+    timeNotification.textContent = "Time is up, but feel free to keep writing!";
+    document
+      .querySelector(".container")
+      .insertBefore(timeNotification, feedbackContainer);
+
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      timeNotification.style.opacity = "0";
+      setTimeout(() => timeNotification.remove(), 1000);
+    }, 5000);
   }
 }
 
@@ -370,7 +381,62 @@ function updateTimerDisplay() {
     .padStart(2, "0")}`;
 }
 
-// Analyze the written content
+function formatAIResponse(text) {
+  // Replace newlines with <br> tags
+  let formatted = text.replace(/\n/g, "<br>");
+
+  // Bold section titles (pattern: Title: or Title - )
+  formatted = formatted.replace(
+    /([A-Z][A-Za-z\s]+)(:|-)/g,
+    "<strong>$1$2</strong>"
+  );
+
+  // Convert bullet points (- or • or * followed by space) into proper list items
+  if (
+    formatted.includes("- ") ||
+    formatted.includes("• ") ||
+    formatted.includes("* ")
+  ) {
+    // Split by line breaks
+    const lines = formatted.split("<br>");
+    const formattedLines = [];
+    let inList = false;
+
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (
+        trimmedLine.startsWith("- ") ||
+        trimmedLine.startsWith("• ") ||
+        trimmedLine.startsWith("* ")
+      ) {
+        // Start a list if not already in one
+        if (!inList) {
+          formattedLines.push("<ul>");
+          inList = true;
+        }
+        // Add as list item, removing the bullet character
+        formattedLines.push(`<li>${trimmedLine.substring(2)}</li>`);
+      } else {
+        // Close the list if we were in one
+        if (inList) {
+          formattedLines.push("</ul>");
+          inList = false;
+        }
+        formattedLines.push(line);
+      }
+    }
+
+    // Close the list if it's still open
+    if (inList) {
+      formattedLines.push("</ul>");
+    }
+
+    formatted = formattedLines.join("");
+  }
+
+  return formatted;
+}
+
 async function analyzeWriting() {
   const text = editorElement.value.trim();
 
@@ -388,26 +454,92 @@ async function analyzeWriting() {
   saveStats();
   updateStatsDisplay();
 
-  // Send the text to OpenAI for analysis
-  const response = await analyzeTextWithAI(text);
+  // Create and show loading indicator
+  const loadingIndicator = document.createElement("div");
+  loadingIndicator.className = "loading-indicator";
+  loadingIndicator.innerHTML = `
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Analyzing your writing...</div>
+  `;
 
-  // Display the suggestions in the feedback container
-  feedbackContainer.style.display = "block";
-  feedbackContainer.innerHTML = `<h3>Suggestions for Improvement:</h3><p>${response}</p>`;
+  // Change the analyze button text and disable it
+  analyzeButton.textContent = "Analyzing...";
+  analyzeButton.disabled = true;
 
-  // Clear the session data since we've completed this writing session
-  clearWritingSession();
+  // Append loading indicator to the container, before the feedback container
+  document
+    .querySelector(".container")
+    .insertBefore(loadingIndicator, feedbackContainer);
+
+  // Perform basic text analysis first (this is quick)
+  performTextAnalysis(text);
+
+  try {
+    // Send the text to OpenAI for analysis (this might take time)
+    const response = await analyzeTextWithAI(text);
+
+    // Once we have the response, remove loading indicator
+    if (loadingIndicator.parentNode) {
+      loadingIndicator.parentNode.removeChild(loadingIndicator);
+    }
+
+    // Reset button
+    analyzeButton.textContent = "Analyze Writing";
+    analyzeButton.disabled = false;
+
+    // Display the suggestions in a well-formatted way
+    if (response) {
+      const aiAnalysisContainer = document.createElement("div");
+      aiAnalysisContainer.className = "ai-analysis";
+      aiAnalysisContainer.innerHTML = `
+        <h3>AI Writing Suggestions</h3>
+        <div class="ai-content">${formatAIResponse(response)}</div>
+      `;
+
+      // Check if the AI analysis section already exists and remove it if it does
+      const existingAISection = feedbackContainer.querySelector(".ai-analysis");
+      if (existingAISection) {
+        feedbackContainer.removeChild(existingAISection);
+      }
+
+      // Add the new analysis
+      feedbackContainer.appendChild(aiAnalysisContainer);
+    }
+
+    // Show feedback container
+    feedbackContainer.style.display = "block";
+
+    // Clear the session data since we've completed this writing session
+    clearWritingSession();
+  } catch (error) {
+    // Handle error - remove loading indicator and show error message
+    if (loadingIndicator.parentNode) {
+      loadingIndicator.parentNode.removeChild(loadingIndicator);
+    }
+
+    // Reset button
+    analyzeButton.textContent = "Analyze Writing";
+    analyzeButton.disabled = false;
+
+    // Show error message
+    const errorContainer = document.createElement("div");
+    errorContainer.className = "error-message";
+    errorContainer.innerHTML = `
+      <p>Sorry, there was an error analyzing your writing. Please try again later.</p>
+      <p class="error-details">Error: ${error.message}</p>
+    `;
+
+    feedbackContainer.innerHTML = "";
+    feedbackContainer.appendChild(errorContainer);
+    feedbackContainer.style.display = "block";
+
+    console.error("Error analyzing writing:", error);
+  }
 }
 
 async function analyzeTextWithAI(text) {
   try {
-    // Show a loading indicator
-    const feedbackElement = document.getElementById("aiAnalysis");
-    if (feedbackElement) {
-      feedbackElement.innerHTML = "Analyzing your writing...";
-    }
-
-    // Your Cloudflare Worker URL (replace with your actual endpoint)
+    // Your Cloudflare Worker URL
     const proxyUrl = "https://mydailyscribe.d8ydev.workers.dev";
 
     // Make the request to your proxy
@@ -445,23 +577,10 @@ async function analyzeTextWithAI(text) {
       aiResponse = result.data.choices[0].message.content;
     }
 
-    // Update the UI with the AI feedback
-    if (feedbackElement) {
-      feedbackElement.innerHTML = aiResponse;
-    }
-
     return aiResponse;
   } catch (error) {
     console.error("Error analyzing text with AI:", error);
-
-    // Update UI with error message
-    const feedbackElement = document.getElementById("aiAnalysis");
-    if (feedbackElement) {
-      feedbackElement.innerHTML =
-        "Sorry, there was an error analyzing your text. Please try again later.";
-    }
-
-    return null;
+    throw error; // Propagate the error back to analyzeWriting for handling
   }
 }
 

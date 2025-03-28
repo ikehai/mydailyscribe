@@ -5,17 +5,84 @@
     <style>
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        width: 600px;
+        width: 100%;
+        min-width: 600px;
         margin: 0;
         padding: 20px;
         background-color: #f9f9f9;
+        box-sizing: border-box;
+        resize: both;
+        overflow: auto;
       }
+
+      /* Added for resize handle visibility */
+      body::after {
+        content: "";
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 15px;
+        height: 15px;
+        background: linear-gradient(135deg, transparent 50%, #ccc 50%, #aaa);
+        cursor: nwse-resize;
+        z-index: 1000;
+      }
+
       .container {
         background-color: white;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 100%;
       }
+
+      /* Time's up notification */
+      .time-notification {
+        background-color: #4299e1;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+        text-align: center;
+        transition: opacity 1s ease;
+        font-weight: 500;
+      }
+
+      /* AI analysis styling */
+      .ai-analysis {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #ebf8ff;
+        border-radius: 6px;
+        border-left: 4px solid #3182ce;
+      }
+
+      .ai-analysis h3 {
+        color: #2c5282;
+        margin-top: 0;
+      }
+
+      .ai-content {
+        line-height: 1.6;
+      }
+
+      .ai-content ul {
+        margin-top: 5px;
+        margin-bottom: 10px;
+        padding-left: 20px;
+      }
+
+      .ai-content li {
+        margin-bottom: 5px;
+      }
+
+      .ai-content strong {
+        color: #2c5282;
+      }
+
+      /* Rest of your CSS remains the same */
       h1 {
         color: #4a4a4a;
         text-align: center;
@@ -185,7 +252,7 @@
         border: 1px solid #e2e8f0;
         border-radius: 6px;
         font-size: 16px;
-        resize: none;
+        resize: vertical; /* Allow vertical resizing */
         margin-bottom: 15px;
         box-sizing: border-box;
       }
@@ -245,6 +312,53 @@
       .passive {
         margin-left: 20px;
         color: #718096;
+      }
+
+      .loading-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 15px 0;
+        padding: 15px;
+        background-color: #f0f7ff;
+        border-radius: 6px;
+        animation: pulse 1.5s infinite ease-in-out;
+      }
+
+      .loading-spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #4299e1;
+        border-radius: 50%;
+        margin-right: 10px;
+        animation: spin 1s linear infinite;
+      }
+
+      .loading-text {
+        color: #2c5282;
+        font-weight: 500;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          background-color: #f0f7ff;
+        }
+        50% {
+          background-color: #e6f0ff;
+        }
+        100% {
+          background-color: #f0f7ff;
+        }
       }
     </style>
   </head>
@@ -333,6 +447,7 @@
           <div class="highlight-title">Passive Voice Instances:</div>
           <div class="passive" id="passiveVoice"></div>
         </div>
+        <!-- AI analysis will be appended here -->
       </div>
 
       <div class="stats-container">
