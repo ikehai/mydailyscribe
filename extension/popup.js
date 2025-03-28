@@ -402,7 +402,7 @@ async function analyzeTextWithAI(text) {
     }
 
     // Your Cloudflare Worker URL (replace with your actual endpoint)
-    const proxyUrl = "https://dailyscribeworker.d8ydev.workers.dev";
+    const proxyUrl = "https://mydailyscribe.d8ydev.workers.dev";
 
     // Make the request to your proxy
     const response = await fetch(proxyUrl, {
