@@ -283,6 +283,12 @@ function updateStatsDisplay() {
 
 // Start the writing session
 function startWriting() {
+  const text = editorElement.value.trim();
+  if (text) {
+    analyzeTextWithAI(text);
+    return;
+  }
+
   editorElement.disabled = false;
   editorElement.focus();
   startButton.disabled = true;
