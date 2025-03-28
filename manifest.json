@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Daily Writing Companion",
+  "name": "My Daily Scribe",
   "version": "1.0",
   "description": "Daily writing prompts, timed writing sessions, and helpful feedback to build your writing habit.",
   "action": {

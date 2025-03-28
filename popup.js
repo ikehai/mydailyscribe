@@ -365,7 +365,7 @@ function updateTimerDisplay() {
 }
 
 // Analyze the written content
-function analyzeWriting() {
+async function analyzeWriting() {
   const text = editorElement.value.trim();
 
   if (text.length === 0) {
@@ -382,14 +382,81 @@ function analyzeWriting() {
   saveStats();
   updateStatsDisplay();
 
-  // Basic grammar and style analysis
-  performTextAnalysis(text);
+  // Send the text to OpenAI for analysis
+  const response = await analyzeTextWithAI(text);
 
-  // Show feedback container
+  // Display the suggestions in the feedback container
   feedbackContainer.style.display = "block";
+  feedbackContainer.innerHTML = `<h3>Suggestions for Improvement:</h3><p>${response}</p>`;
 
   // Clear the session data since we've completed this writing session
   clearWritingSession();
+}
+
+async function analyzeTextWithAI(text) {
+  try {
+    // Show a loading indicator
+    const feedbackElement = document.getElementById("aiAnalysis");
+    if (feedbackElement) {
+      feedbackElement.innerHTML = "Analyzing your writing...";
+    }
+
+    // Your Cloudflare Worker URL (replace with your actual endpoint)
+    const proxyUrl = "https://dailyscribeworker.d8ydev.workers.dev";
+
+    // Make the request to your proxy
+    const response = await fetch(proxyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: `Analyze the following text and provide writing feedback: "${text}"`,
+        model: "gpt-3.5-turbo",
+        max_tokens: 500,
+        temperature: 0.7,
+      }),
+    });
+
+    // Check if the request was successful
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Parse the response
+    const result = await response.json();
+
+    // Extract the AI response
+    let aiResponse = "Could not analyze text.";
+
+    if (
+      result.success &&
+      result.data &&
+      result.data.choices &&
+      result.data.choices.length > 0 &&
+      result.data.choices[0].message
+    ) {
+      aiResponse = result.data.choices[0].message.content;
+    }
+
+    // Update the UI with the AI feedback
+    if (feedbackElement) {
+      feedbackElement.innerHTML = aiResponse;
+    }
+
+    return aiResponse;
+  } catch (error) {
+    console.error("Error analyzing text with AI:", error);
+
+    // Update UI with error message
+    const feedbackElement = document.getElementById("aiAnalysis");
+    if (feedbackElement) {
+      feedbackElement.innerHTML =
+        "Sorry, there was an error analyzing your text. Please try again later.";
+    }
+
+    return null;
+  }
 }
 
 // Count words in text
